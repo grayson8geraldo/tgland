@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real or AI? — Raad het en verdien beloningen!</title>
+    <meta name="description" content="Speel Real or AI? op Telegram. Raad of een foto of video echt of AI-gegenereerd is. Verdien beloningen en nodig vrienden uit!">
+    <meta property="og:title" content="Real or AI? — Raad het en verdien beloningen!">
+    <meta property="og:description" content="Kun jij het verschil zien tussen echt en AI? Test jezelf en verdien geld!">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="nl_NL">
+    <meta name="theme-color" content="#7C3AED">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --purple: #7C3AED;
+            --blue: #3B82F6;
+            --cyan: #06B6D4;
+            --pink: #EC4899;
+            --neon-green: #10B981;
+            --dark-bg: #0A0A1A;
+            --card-bg: rgba(255,255,255,0.05);
+            --card-border: rgba(255,255,255,0.1);
+            --text: #F1F5F9;
+            --text-muted: #94A3B8;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* === BACKGROUND EFFECTS === */
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bg-glow-1 { top: -200px; left: -100px; background: var(--purple); }
+        .bg-glow-2 { top: 40%; right: -200px; background: var(--blue); }
+        .bg-glow-3 { bottom: -100px; left: 30%; background: var(--pink); }
+
+        /* === LAYOUT === */
+        .container { max-width: 480px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+
+        /* === HEADER === */
+        .header {
+            padding: 16px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .logo-icon {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(124,58,237,0.4);
+        }
+        .logo-text { font-weight: 800; font-size: 18px; letter-spacing: -0.5px; }
+        .logo-text span { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* === HERO === */
+        .hero {
+            padding: 40px 0 30px;
+            text-align: center;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(124,58,237,0.15);
+            border: 1px solid rgba(124,58,237,0.3);
+            border-radius: 100px;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #C4B5FD;
+            margin-bottom: 20px;
+            animation: pulse-badge 2s infinite;
+        }
+        @keyframes pulse-badge {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(124,58,237,0.3); }
+            50% { box-shadow: 0 0 0 8px rgba(124,58,237,0); }
+        }
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--purple), var(--blue), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradient-shift 3s ease infinite;
+        }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .hero p {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            max-width: 360px;
+            margin: 0 auto 28px;
+        }
+
+        /* === BUTTONS === */
+        .btn-group { display: flex; flex-direction: column; gap: 12px; }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 24px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            color: white;
+            box-shadow: 0 8px 30px rgba(124,58,237,0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(124,58,237,0.5);
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(25deg); }
+            100% { transform: translateX(100%) rotate(25deg); }
+        }
+        .btn-secondary {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text);
+            backdrop-filter: blur(10px);
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+        .btn-icon { font-size: 22px; }
+
+        /* === GAME PREVIEW === */
+        .game-preview {
+            margin: 40px 0;
+            padding: 2px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, var(--purple), var(--blue), var(--cyan));
+            animation: border-glow 4s ease infinite;
+        }
+        @keyframes border-glow {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        .game-preview-inner {
+            background: #12122A;
+            border-radius: 22px;
+            padding: 24px;
+            text-align: center;
+        }
+        .game-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+        .game-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .game-card {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .game-card:hover { transform: scale(1.03); }
+        .game-card-bg {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        .game-card-real .game-card-bg {
+            background: linear-gradient(135deg, #1E3A5F, #2D5F8A);
+        }
+        .game-card-ai .game-card-bg {
+            background: linear-gradient(135deg, #3D1F5C, #6B2FA0);
+        }
+        .game-card-label {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .game-card-real .game-card-label { color: var(--neon-green); }
+        .game-card-ai .game-card-label { color: var(--pink); }
+        .game-question {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .game-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* === STATS BAR === */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 30px 0;
+        }
+        .stat-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px 8px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .stat-number {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--purple), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* === SECTION TITLES === */
+        .section { padding: 30px 0; }
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        /* === HOW IT WORKS === */
+        .steps { display: flex; flex-direction: column; gap: 16px; }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .step.visible { opacity: 1; transform: translateY(0); }
+        .step-num {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+        }
+        .step:nth-child(1) .step-num { background: linear-gradient(135deg, var(--purple), var(--blue)); }
+        .step:nth-child(2) .step-num { background: linear-gradient(135deg, var(--blue), var(--cyan)); }
+        .step:nth-child(3) .step-num { background: linear-gradient(135deg, var(--cyan), var(--neon-green)); }
+        .step-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+        .step-desc { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+
+        /* === REWARDS === */
+        .rewards-grid { display: flex; flex-direction: column; gap: 12px; }
+        .reward-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .reward-card.visible { opacity: 1; transform: translateY(0); }
+        .reward-icon {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+        }
+        .reward-card:nth-child(1) .reward-icon { background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(6,182,212,0.2)); }
+        .reward-card:nth-child(2) .reward-icon { background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(124,58,237,0.2)); }
+        .reward-card:nth-child(3) .reward-icon { background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(124,58,237,0.2)); }
+        .reward-title { font-weight: 700; font-size: 15px; margin-bottom: 3px; }
+        .reward-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+
+        /* === TESTIMONIALS === */
+        .testimonials { display: flex; flex-direction: column; gap: 12px; }
+        .testimonial {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .testimonial.visible { opacity: 1; transform: translateY(0); }
+        .testimonial-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .testimonial-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .testimonial:nth-child(1) .testimonial-avatar { background: linear-gradient(135deg, #F59E0B, #EF4444); }
+        .testimonial:nth-child(2) .testimonial-avatar { background: linear-gradient(135deg, #3B82F6, #8B5CF6); }
+        .testimonial:nth-child(3) .testimonial-avatar { background: linear-gradient(135deg, #10B981, #06B6D4); }
+        .testimonial-name { font-weight: 700; font-size: 14px; }
+        .testimonial-info { font-size: 12px; color: var(--text-muted); }
+        .testimonial-stars { color: #FBBF24; font-size: 14px; letter-spacing: 2px; }
+        .testimonial-text { font-size: 14px; line-height: 1.5; color: var(--text-muted); }
+
+        /* === FAQ === */
+        .faq-list { display: flex; flex-direction: column; gap: 10px; }
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+        .faq-question {
+            padding: 16px 20px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            user-select: none;
+        }
+        .faq-question::after {
+            content: '+';
+            font-size: 20px;
+            font-weight: 300;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+        .faq-item.active .faq-question::after { transform: rotate(45deg); }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        .faq-item.active .faq-answer { max-height: 200px; }
+        .faq-answer-inner {
+            padding: 0 20px 16px;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* === FINAL CTA === */
+        .final-cta {
+            text-align: center;
+            padding: 40px 0 120px;
+        }
+        .final-cta h2 {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .final-cta p {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        /* === STICKY CTA (MOBILE) === */
+        .sticky-cta {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 12px 16px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            background: rgba(10,10,26,0.9);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--card-border);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        .sticky-cta.visible { transform: translateY(0); }
+        .sticky-cta .btn { padding: 14px 20px; font-size: 15px; }
+
+        /* === FOOTER === */
+        .footer {
+            text-align: center;
+            padding: 20px 0 30px;
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        /* === ANIMATIONS === */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4,0,0.2,1);
+        }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        .float-anim {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* === COUNTER ANIMATION === */
+        .counter { display: inline-block; }
+
+        /* === RESPONSIVE === */
+        @media (min-width: 640px) {
+            .hero h1 { font-size: 44px; }
+            .container { max-width: 540px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+<div class="bg-glow bg-glow-3"></div>
+
+<div class="container">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-icon">🎯</div>
+        <div class="logo-text"><span>Real or AI?</span></div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="badge">🔥 Trending in Nederland</div>
+        <h1>
+            Kun jij <span class="gradient-text">echt van AI</span> onderscheiden?
+        </h1>
+        <p>Bekijk foto's en video's, raad of ze echt of AI-gegenereerd zijn, en verdien beloningen! Nodig vrienden uit voor extra bonussen 💰</p>
+        <div class="btn-group">
+            <a href="https://t.me/RealOrAI_NL_bot" class="btn btn-primary" id="btn-open">
+                <span class="btn-icon">✈️</span>
+                Open in Telegram
+            </a>
+            <a href="#" class="btn btn-secondary" id="btn-download" onclick="handleDownload(event)">
+                <span class="btn-icon">📲</span>
+                Download Telegram & Speel
+            </a>
+        </div>
+    </section>
+
+    <!-- Game Preview -->
+    <div class="game-preview float-anim">
+        <div class="game-preview-inner">
+            <div class="game-label">👁️ Live game voorbeeld</div>
+            <div class="game-cards">
+                <div class="game-card game-card-real">
+                    <div class="game-card-bg">📸</div>
+                    <div class="game-card-label">ECHT ✅</div>
+                </div>
+                <div class="game-card game-card-ai">
+                    <div class="game-card-bg">🤖</div>
+                    <div class="game-card-label">AI ❌</div>
+                </div>
+            </div>
+            <div class="game-question">Welke is echt? 🤔</div>
+            <div class="game-sub">Kies de juiste en verdien punten!</div>
+        </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar fade-in">
+        <div class="stat-item">
+            <div class="stat-number"><span class="counter" data-target="47832">0</span>+</div>
+            <div class="stat-label">Spelers</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">€<span class="counter" data-target="12450">0</span></div>
+            <div class="stat-label">Uitbetaald</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number"><span class="counter" data-target="98">0</span>%</div>
+            <div class="stat-label">Positief</div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <section class="section">
+        <h2 class="section-title">Hoe werkt het? 🎮</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div>
+                    <div class="step-title">Open de bot 🤖</div>
+                    <div class="step-desc">Start de Telegram bot en begin direct met spelen. Geen registratie nodig!</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div>
+                    <div class="step-title">Raad echt of AI 🧠</div>
+                    <div class="step-desc">Bekijk foto's en video's en kies: is het echt of door AI gemaakt? Hoe meer je goed hebt, hoe meer je verdient!</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div>
+                    <div class="step-title">Verdien & cashout 💸</div>
+                    <div class="step-desc">Wissel je punten in voor echte beloningen. Nodig vrienden uit voor 20% extra bonus!</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rewards -->
+    <section class="section">
+        <h2 class="section-title">Beloningen 🏆</h2>
+        <div class="rewards-grid">
+            <div class="reward-card">
+                <div class="reward-icon">🎯</div>
+                <div>
+                    <div class="reward-title">Goed geantwoord = punten</div>
+                    <div class="reward-desc">Elke juiste antwoord levert je punten op die je kunt inwisselen voor geld</div>
+                </div>
+            </div>
+            <div class="reward-card">
+                <div class="reward-icon">👥</div>
+                <div>
+                    <div class="reward-title">Nodig een vriend uit</div>
+                    <div class="reward-desc">Ontvang 20% bonus van de verdiensten van elke vriend die je uitnodigt</div>
+                </div>
+            </div>
+            <div class="reward-card">
+                <div class="reward-icon">🏅</div>
+                <div>
+                    <div class="reward-title">Dagelijkse streaks</div>
+                    <div class="reward-desc">Speel elke dag en verdien extra bonuspunten door je streak vol te houden</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section">
+        <h2 class="section-title">Wat spelers zeggen 💬</h2>
+        <div class="testimonials">
+            <div class="testimonial">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">D</div>
+                    <div>
+                        <div class="testimonial-name">Daan V.</div>
+                        <div class="testimonial-info">Amsterdam · 3 weken geleden</div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+                <div class="testimonial-text">"Zag het op TikTok en dacht: dit is nep. Maar na 2 weken spelen heb ik al €47 verdiend. Het is echt verslavend om te raden! 😂"</div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">S</div>
+                    <div>
+                        <div class="testimonial-name">Sophie M.</div>
+                        <div class="testimonial-info">Rotterdam · 1 week geleden</div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+                <div class="testimonial-text">"Super leuk concept! Ik speel het elke dag in de trein. Mijn vrienden doen nu ook mee en ik verdien extra door het referral systeem 🙌"</div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">L</div>
+                    <div>
+                        <div class="testimonial-name">Lars K.</div>
+                        <div class="testimonial-info">Utrecht · 5 dagen geleden</div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+                <div class="testimonial-text">"AI wordt steeds beter, maar ik score nog steeds 85%+ correct. De beste manier om te leren hoe AI-content eruit ziet 🧠"</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+        <h2 class="section-title">Veelgestelde vragen ❓</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Is het echt gratis?</div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Ja! Het spel is 100% gratis te spelen. Je hebt alleen een Telegram account nodig om te beginnen. Er zijn geen verborgen kosten.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Hoe kan ik geld verdienen?</div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Je verdient punten door correct te raden of content echt of AI-gegenereerd is. Deze punten kun je inwisselen voor echte beloningen. Daarnaast krijg je 20% bonus voor elke vriend die je uitnodigt!</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Hoe werkt het referral programma?</div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Deel je unieke link met vrienden. Voor elke vriend die via jouw link begint te spelen, ontvang je 20% van hun verdiende punten als bonus — zonder dat het ten koste gaat van hun verdiensten.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Heb ik Telegram nodig?</div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Ja, het spel draait als een Telegram bot. Telegram is gratis te downloaden voor iOS en Android. Het is supersnel geïnstalleerd!</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <h2>Klaar om te spelen? 🚀</h2>
+        <p>Doe mee met duizenden Nederlanders die al verdienen terwijl ze spelen!</p>
+        <div class="btn-group">
+            <a href="https://t.me/RealOrAI_NL_bot" class="btn btn-primary">
+                <span class="btn-icon">✈️</span>
+                Start nu gratis
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <div class="footer">
+        © 2026 Real or AI? · Alle rechten voorbehouden
+    </div>
+
+</div>
+
+<!-- Sticky CTA Mobile -->
+<div class="sticky-cta" id="sticky-cta">
+    <a href="https://t.me/RealOrAI_NL_bot" class="btn btn-primary" style="width:100%">
+        <span class="btn-icon">✈️</span>
+        Open in Telegram — Gratis
+    </a>
+</div>
+
+<script>
+    // === Scroll animations ===
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in, .step, .reward-card, .testimonial').forEach(el => {
+        observer.observe(el);
+    });
+
+    // === Counter animation ===
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = +counter.dataset.target;
+                const duration = 2000;
+                const start = performance.now();
+                const animate = (now) => {
+                    const progress = Math.min((now - start) / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    counter.textContent = Math.floor(eased * target).toLocaleString('nl-NL');
+                    if (progress < 1) requestAnimationFrame(animate);
+                };
+                requestAnimationFrame(animate);
+                counterObserver.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+    // === Sticky CTA ===
+    const stickyCta = document.getElementById('sticky-cta');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        if (scrollY > 500) {
+            stickyCta.classList.add('visible');
+        } else {
+            stickyCta.classList.remove('visible');
+        }
+        lastScroll = scrollY;
+    });
+
+    // === FAQ Toggle ===
+    function toggleFaq(el) {
+        const item = el.parentElement;
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+    }
+
+    // === Download Telegram + Redirect to Bot ===
+    function handleDownload(e) {
+        e.preventDefault();
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isAndroid = /Android/i.test(navigator.userAgent);
+
+        let downloadUrl;
+        if (isIOS) {
+            downloadUrl = 'https://apps.apple.com/app/telegram-messenger/id686449807';
+        } else if (isAndroid) {
+            downloadUrl = 'https://play.google.com/store/apps/details?id=org.telegram.messenger';
+        } else {
+            downloadUrl = 'https://telegram.org/dl';
+        }
+
+        // Open download page
+        window.open(downloadUrl, '_blank');
+
+        // Store intent in localStorage
+        localStorage.setItem('tg_redirect', 'pending');
+        localStorage.setItem('tg_redirect_time', Date.now().toString());
+
+        // Try to open bot after delay (gives time to install)
+        setTimeout(() => {
+            window.location.href = 'https://t.me/RealOrAI_NL_bot';
+        }, 3000);
+    }
+
+    // === Check for pending redirect on page load ===
+    (function() {
+        const pending = localStorage.getItem('tg_redirect');
+        const time = localStorage.getItem('tg_redirect_time');
+        if (pending === 'pending' && time) {
+            const elapsed = Date.now() - parseInt(time);
+            // If user returns within 10 minutes, redirect to bot
+            if (elapsed < 600000) {
+                localStorage.removeItem('tg_redirect');
+                localStorage.removeItem('tg_redirect_time');
+                setTimeout(() => {
+                    window.location.href = 'https://t.me/RealOrAI_NL_bot';
+                }, 1500);
+            } else {
+                localStorage.removeItem('tg_redirect');
+                localStorage.removeItem('tg_redirect_time');
+            }
+        }
+    })();
+</script>
+
+</body>
+</html>
