@@ -1,17 +1,24 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useEffect, useState, useRef } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 const TELEGRAM_BOT = "https://t.me/NepOfNietBot";
 
-const liveFeed = [
-  { initials: "JD", name: "Jesper D.", amount: "+ €1,00", time: "2 min geleden", bgColor: "bg-primary/20", textColor: "text-primary" },
-  { initials: "MA", name: "Mila A.", amount: "+ €10,00", time: "5 min geleden", bgColor: "bg-tertiary/20", textColor: "text-tertiary" },
-  { initials: "SB", name: "Sophie B.", amount: "+ €1,00", time: "8 min geleden", bgColor: "bg-secondary/20", textColor: "text-secondary" },
-  { initials: "TH", name: "Tim H.", amount: "+ €1,00", time: "12 min geleden", bgColor: "bg-surface-variant", textColor: "text-on-surface-variant" },
-  { initials: "LV", name: "Lars V.", amount: "+ €1,00", time: "15 min geleden", bgColor: "bg-primary/20", textColor: "text-primary" },
+const allFeedEntries = [
+  { initials: "JD", name: "Jesper D.", amount: "+ €1,00", bgColor: "bg-primary/20", textColor: "text-primary" },
+  { initials: "MA", name: "Mila A.", amount: "+ €10,00", bgColor: "bg-tertiary/20", textColor: "text-tertiary" },
+  { initials: "SB", name: "Sophie B.", amount: "+ €1,00", bgColor: "bg-secondary/20", textColor: "text-secondary" },
+  { initials: "TH", name: "Tim H.", amount: "+ €1,00", bgColor: "bg-surface-variant", textColor: "text-on-surface-variant" },
+  { initials: "LV", name: "Lars V.", amount: "+ €1,00", bgColor: "bg-primary/20", textColor: "text-primary" },
+  { initials: "NK", name: "Nina K.", amount: "+ €10,00", bgColor: "bg-tertiary/20", textColor: "text-tertiary" },
+  { initials: "RW", name: "Ruben W.", amount: "+ €1,00", bgColor: "bg-secondary/20", textColor: "text-secondary" },
+  { initials: "AJ", name: "Anna J.", amount: "+ €1,00", bgColor: "bg-primary/20", textColor: "text-primary" },
+  { initials: "DM", name: "Daan M.", amount: "+ €10,00", bgColor: "bg-tertiary/20", textColor: "text-tertiary" },
+  { initials: "EH", name: "Eva H.", amount: "+ €1,00", bgColor: "bg-secondary/20", textColor: "text-secondary" },
 ];
+
+const timeLabels = ["Nu", "1 min geleden", "3 min geleden", "5 min geleden", "8 min geleden"];
 
 const stats = [
   { label: "Actieve Spelers", value: "12.450+", icon: "group" },
@@ -27,8 +34,8 @@ function AnimatedCounter({ target, prefix = "", suffix = "" }: { target: number;
   useEffect(() => {
     if (!isInView) return;
     const duration = 2000;
-    const steps = 60;
-    const increment = target / steps;
+    const frames = 60;
+    const increment = target / frames;
     let current = 0;
     const timer = setInterval(() => {
       current += increment;
@@ -38,7 +45,7 @@ function AnimatedCounter({ target, prefix = "", suffix = "" }: { target: number;
       } else {
         setCount(Math.floor(current));
       }
-    }, duration / steps);
+    }, duration / frames);
     return () => clearInterval(timer);
   }, [target, isInView]);
 
@@ -48,6 +55,61 @@ function AnimatedCounter({ target, prefix = "", suffix = "" }: { target: number;
       {count.toLocaleString("nl-NL")}
       {suffix}
     </span>
+  );
+}
+
+function LiveFeed() {
+  const [offset, setOffset] = useState(0);
+  const visible = 5;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setOffset((prev) => (prev + 1) % allFeedEntries.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getItems = useCallback(() => {
+    const items = [];
+    for (let i = 0; i < visible; i++) {
+      const idx = (offset + i) % allFeedEntries.length;
+      items.push({ ...allFeedEntries[idx], time: timeLabels[i], key: `${offset}-${i}` });
+    }
+    return items;
+  }, [offset]);
+
+  const items = getItems();
+
+  return (
+    <div className="space-y-3">
+      <AnimatePresence mode="popLayout">
+        {items.map((item, i) => (
+          <motion.div
+            key={item.key}
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: i >= 4 ? 0.4 : 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className={`flex items-center justify-between p-3 sm:p-4 bg-background/50 rounded-xl border border-outline-variant/10 ${i >= 4 ? "opacity-40" : ""}`}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${item.bgColor} flex items-center justify-center ${item.textColor} text-xs font-bold shrink-0`}
+              >
+                {item.initials}
+              </div>
+              <div className="min-w-0">
+                <span className="text-sm font-medium block truncate">{item.name}</span>
+                <span className="text-[10px] sm:text-xs text-on-surface-variant">{item.time}</span>
+              </div>
+            </div>
+            <span className="text-secondary font-bold text-sm whitespace-nowrap ml-3">
+              {item.amount}
+            </span>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -164,47 +226,21 @@ export default function Rewards() {
                 <span className="text-secondary text-[10px] sm:text-xs font-label font-bold uppercase">Live</span>
               </div>
             </div>
-            <div className="space-y-3">
-              {liveFeed.map((item, i) => (
-                <motion.div
-                  key={item.name}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: i >= 4 ? 0.4 : 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.4 + i * 0.1 }}
-                  className={`flex items-center justify-between p-3 bg-background/50 rounded-xl border border-outline-variant/10 ${i >= 4 ? "opacity-40" : ""}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full ${item.bgColor} flex items-center justify-center ${item.textColor} text-xs font-bold shrink-0`}
-                    >
-                      {item.initials}
-                    </div>
-                    <div className="min-w-0">
-                      <span className="text-sm font-medium block truncate">{item.name}</span>
-                      <span className="text-[10px] sm:text-xs text-on-surface-variant">{item.time}</span>
-                    </div>
-                  </div>
-                  <span className="text-secondary font-bold text-sm whitespace-nowrap ml-3">
-                    {item.amount}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
+            <LiveFeed />
           </motion.div>
 
-          {/* Mini Stats Card */}
+          {/* Platform Stats Card */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-surface-container-high p-6 sm:p-8 rounded-xl border border-outline-variant/20 flex flex-col justify-between"
+            className="bg-surface-container-high p-6 sm:p-8 rounded-xl border border-outline-variant/20"
           >
-            <div className="text-on-surface-variant font-label text-[10px] sm:text-xs uppercase font-bold tracking-widest mb-4 sm:mb-6">
+            <div className="text-on-surface-variant font-label text-[10px] sm:text-xs uppercase font-bold tracking-widest mb-6 sm:mb-8">
               Platform Stats
             </div>
-            <div className="space-y-5 sm:space-y-6">
+            <div className="flex flex-col gap-6 sm:gap-8">
               {stats.map((stat, i) => (
                 <motion.div
                   key={stat.label}
@@ -212,14 +248,14 @@ export default function Rewards() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.5 + i * 0.1 }}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-4"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    <span className="material-symbols-outlined text-xl">{stat.icon}</span>
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <span className="material-symbols-outlined text-xl sm:text-2xl">{stat.icon}</span>
                   </div>
                   <div>
-                    <div className="font-headline font-bold text-lg sm:text-xl text-white">{stat.value}</div>
-                    <div className="text-on-surface-variant text-[10px] sm:text-xs font-label uppercase tracking-wider">{stat.label}</div>
+                    <div className="font-headline font-bold text-xl sm:text-2xl text-white leading-tight">{stat.value}</div>
+                    <div className="text-on-surface-variant text-[10px] sm:text-xs font-label uppercase tracking-wider mt-0.5">{stat.label}</div>
                   </div>
                 </motion.div>
               ))}

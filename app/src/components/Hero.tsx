@@ -10,7 +10,7 @@ export default function Hero() {
       className="relative min-h-[100svh] pt-24 sm:pt-32 pb-12 sm:pb-20 px-4 sm:px-6 flex flex-col items-center justify-center overflow-hidden"
       id="challenge"
     >
-      {/* Background Orbs — smaller on mobile for performance */}
+      {/* Background Orbs */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-primary/10 rounded-full blur-[80px] sm:blur-[120px] animate-pulse-glow" />
         <div className="absolute bottom-1/4 right-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-tertiary/10 rounded-full blur-[80px] sm:blur-[120px] animate-pulse-glow" style={{ animationDelay: "1s" }} />
@@ -78,18 +78,18 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Hero Image */}
+        {/* Hero Image — local image */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9, x: 40 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="relative group mt-4 lg:mt-0"
         >
-          <div className="relative aspect-square max-w-[400px] lg:max-w-none mx-auto rounded-xl overflow-hidden glitch-border border-2 border-transparent">
+          <div className="relative aspect-[3/4] sm:aspect-square max-w-[400px] lg:max-w-none mx-auto rounded-xl overflow-hidden glitch-border border-2 border-transparent">
             <img
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-              alt="Cinematic close-up of a human face split with a digital glitch effect"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBYkTO0srb414nIub-K9u2sLsOw3ZVXGw5FgGXa0lD6rxSlOWt4riFMhTzvR9WZnGzRSqhqAGcJfbVsAcu-Hu0eTxFRxvh37wFRIlHFXJ6ndWn-rHk1MAD1Sj6_-s36W8_vILSopsXoqqOWulUaIsNXgtomrkip4rG-d5afD-6wPZhqw1oz3RUA8moGuANaH4mpjuJb1nGxOdk4yq_4mPyKb13AjooGMSCUHs1z-IQKjWLr-E-DWNJq2wELv0UI6N9dwF57HTa_g"
+              className="w-full h-full object-cover object-top"
+              alt="Human face split with AI circuit patterns — Real vs AI challenge"
+              src="/images/hero.jpg"
               loading="eager"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />

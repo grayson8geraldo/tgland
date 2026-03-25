@@ -38,8 +38,8 @@ export default function CTA() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-on-surface-variant text-base sm:text-xl md:text-2xl max-w-2xl mx-auto mb-8 sm:mb-12 relative z-10"
           >
-            Scan de code of klik op de button om direct naar onze Telegram-bot
-            te gaan en je eerste €1 te verdienen.
+            Klik op de button om direct naar onze Telegram-bot te gaan en je
+            eerste €1 te verdienen.
           </motion.p>
 
           <motion.div
@@ -47,31 +47,20 @@ export default function CTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-col md:flex-row items-center justify-center gap-8 sm:gap-12 relative z-10"
+            className="flex flex-col items-center justify-center gap-4 relative z-10"
           >
-            {/* QR Code Placeholder */}
-            <div className="w-36 h-36 sm:w-48 sm:h-48 bg-white p-3 sm:p-4 rounded-xl shadow-[0_0_50px_rgba(255,255,255,0.1)] group cursor-pointer shrink-0">
-              <div className="w-full h-full bg-background rounded-lg border-4 border-dashed border-primary/20 flex items-center justify-center">
-                <span className="material-symbols-outlined text-5xl sm:text-6xl text-primary/40 group-hover:scale-110 transition-transform">
-                  qr_code_2
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-4 w-full md:w-auto">
-              <a
-                href={TELEGRAM_BOT}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gradient-to-r from-primary-dim to-primary text-on-primary-fixed font-label font-bold px-8 sm:px-10 py-4 sm:py-5 rounded-xl text-lg sm:text-xl flex items-center justify-center gap-3 active:scale-[0.97] transition-all shadow-[0_0_40px_rgba(211,148,255,0.4)] hover:shadow-[0_0_60px_rgba(211,148,255,0.6)] min-h-[52px]"
-              >
-                <span className="material-symbols-outlined">send</span>
-                Open in Telegram
-              </a>
-              <p className="text-on-surface-variant text-xs sm:text-sm font-label uppercase tracking-widest font-bold text-center">
-                Geen installatie nodig
-              </p>
-            </div>
+            <a
+              href={TELEGRAM_BOT}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto bg-gradient-to-r from-primary-dim to-primary text-on-primary-fixed font-label font-bold px-8 sm:px-10 py-4 sm:py-5 rounded-xl text-lg sm:text-xl flex items-center justify-center gap-3 active:scale-[0.97] transition-all shadow-[0_0_40px_rgba(211,148,255,0.4)] hover:shadow-[0_0_60px_rgba(211,148,255,0.6)] min-h-[52px]"
+            >
+              <span className="material-symbols-outlined">send</span>
+              Open in Telegram
+            </a>
+            <p className="text-on-surface-variant text-xs sm:text-sm font-label uppercase tracking-widest font-bold text-center">
+              Geen installatie nodig
+            </p>
           </motion.div>
 
           {/* Telegram Download Section */}
