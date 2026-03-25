@@ -2,8 +2,7 @@
 
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef, useCallback } from "react";
-
-const TELEGRAM_BOT = "https://t.me/NepOfNietBot";
+import { TELEGRAM_BOT } from "@/config";
 
 const allFeedEntries = [
   { initials: "JD", name: "Jesper D.", amount: "+ €1,00", bgColor: "bg-primary/20", textColor: "text-primary" },

@@ -41,6 +41,21 @@ body {
   background: #d394ff;
 }
 
+/* Hide icon text until font loads */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-size: 24px;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  -webkit-font-smoothing: antialiased;
+  visibility: visible;
+}
+
+@supports (font-display: block) {
+  .material-symbols-outlined {
+    font-display: block;
+  }
+}
+
 /* Glitch border effect */
 .glitch-border {
   box-shadow: -2px 0 0 #ff51fa, 2px 0 0 #00fdc1;

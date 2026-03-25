@@ -1,8 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const TELEGRAM_BOT = "https://t.me/NepOfNietBot";
+import { TELEGRAM_BOT } from "@/config";
 
 const steps = [
   {

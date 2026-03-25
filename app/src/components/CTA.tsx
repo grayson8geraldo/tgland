@@ -1,11 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const TELEGRAM_BOT = "https://t.me/NepOfNietBot";
-const TELEGRAM_DOWNLOAD_ANDROID = "https://play.google.com/store/apps/details?id=org.telegram.messenger";
-const TELEGRAM_DOWNLOAD_IOS = "https://apps.apple.com/app/telegram-messenger/id686449807";
-const TELEGRAM_DOWNLOAD_DESKTOP = "https://desktop.telegram.org/";
+import { TELEGRAM_BOT, TELEGRAM_DOWNLOAD_IOS, TELEGRAM_DOWNLOAD_ANDROID, TELEGRAM_DOWNLOAD_DESKTOP } from "@/config";
 
 export default function CTA() {
   return (
